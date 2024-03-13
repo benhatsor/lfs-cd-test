@@ -22,12 +22,12 @@ class GPT {
 
   async initialize() {
     if (this.initialized) return console.error("Model already initialized");
-    if (!navigator.gpu) throw new Error("WebGPU is not supported");
+    //if (!navigator.gpu) throw new Error("WebGPU is not supported");
 
-    const adapter = await navigator.gpu.requestAdapter();
-    this.device = await adapter.requestDevice();
+    //const adapter = await navigator.gpu.requestAdapter();
+    //this.device = await adapter.requestDevice();
 
-    initializeOperations(this.device);
+    //initializeOperations(this.device);
 
     [this.model, this.params] = await this.loadModel(this.folder);
     this.tokenizer = this.tokenizerType == "bpe" ? new GPT2Tokenizer() : new SimpleTokenizer();
