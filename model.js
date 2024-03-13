@@ -242,7 +242,7 @@ class GPT {
 
     // ---------------- Compute Passes ----------------
 
-    const commandEncoder = this.device.createCommandEncoder();
+    /*const commandEncoder = this.device.createCommandEncoder();
     for (const pass of this.computePasses) {
       if (pass.flag === "compute") {
         const passEncoder = commandEncoder.beginComputePass();
@@ -255,7 +255,7 @@ class GPT {
       }
     }
     this.device.queue.submit([commandEncoder.finish()]);
-
+*/
     // ---------------- Read Results ----------------
 
     await resultBuffer.mapAsync(GPUMapMode.READ);
@@ -296,6 +296,9 @@ class GPT {
     // I'm unsure if this is a reasonable requirement here. At worst, I can figure out some padding method.
     if ((params.n_embd / params.n_head) % 4 !== 0) throw new Error("Model load failed: n_embd / n_head must be divisible by 4.");
     const tokenParam = this.bufferSize(params.vocab_size, params.n_embd);
+    
+    /*
+    
     let minSplits = Math.ceil(tokenParam / this.device.limits.maxStorageBufferBindingSize);
     function vocabChunkSizeCalc(vocab_size, n_embd, splits, maxStorageBufferBindingSize) {
       // Possibly could be better? Needs actual benchmarking to know what approach is best.
@@ -334,6 +337,7 @@ class GPT {
     console.log("Params:", params);
 
     return params;
+    */
   }
 
   async loadEmbeddings(params, weightsFolder) {
@@ -488,7 +492,7 @@ class GPT {
   }
 
   initTensor(data, dims, ops) {
-    const buffer = this.device.createBuffer({
+    /*const buffer = this.device.createBuffer({
       size: this.bufferSize(dims[0], dims[1] || 1, dims[2] || 1),
       usage: ops.map((u) => bufferUsageDict[u]).reduce((a, b) => a | b),
       mappedAtCreation: true,
@@ -496,7 +500,7 @@ class GPT {
     new Float32Array(buffer.getMappedRange()).set(data);
     buffer.unmap();
     this.unloadDeletionStack.push(buffer);
-    return buffer;
+    return buffer;*/
   }
 
   unloadBuffers() {
@@ -506,8 +510,8 @@ class GPT {
 
   bufferSize(dimX, dimY = 1, dimZ = 1) {
     const size = Math.ceil((dimX * dimY * dimZ * Float32Array.BYTES_PER_ELEMENT) / this.minBufferOffset) * this.minBufferOffset;
-    if (size > this.device.limits.maxStorageBufferBindingSize)
-      console.warn("Warning: Buffer size calc result exceeds GPU limit, are you using this value for a tensor size?", dimX, dimY, dimZ, size);
+    //if (size > this.device.limits.maxStorageBufferBindingSize)
+      //console.warn("Warning: Buffer size calc result exceeds GPU limit, are you using this value for a tensor size?", dimX, dimY, dimZ, size);
     return size;
   }
 }
